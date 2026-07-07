@@ -4,7 +4,12 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" })
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
   const [sent, setSent] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -14,7 +19,10 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative min-h-screen flex items-center py-32 px-4">
+    <section
+      id="contact"
+      className="relative min-h-screen flex items-center py-32 px-4"
+    >
       <div className="max-w-4xl mx-auto w-full">
         <motion.h2
           className="text-3xl md:text-5xl font-bold text-center mb-4"
@@ -36,7 +44,7 @@ export default function Contact() {
 
         <motion.form
           onSubmit={handleSubmit}
-          className="max-w-lg mx-auto p-8 rounded-2xl space-y-6"
+          className="max-w-lg mx-auto p-8 rounded-2xl space-y-6 mb-8"
           style={{
             background: "var(--glass)",
             border: "1px solid var(--glass-border)",
@@ -54,7 +62,9 @@ export default function Contact() {
               <input
                 type={field === "email" ? "email" : "text"}
                 value={form[field]}
-                onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, [field]: e.target.value })
+                }
                 className="w-full bg-transparent border rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-primary"
                 style={{ borderColor: "var(--glass-border)" }}
                 required
@@ -100,6 +110,40 @@ export default function Contact() {
             </motion.p>
           )}
         </motion.form>
+
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a
+            href="https://wa.me/1234567890"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 rounded-xl text-sm font-medium transition-all hover:scale-105"
+            style={{
+              background: "#25D366",
+              color: "#fff",
+            }}
+          >
+            WhatsApp
+          </a>
+          <a
+            href="#"
+            className="px-6 py-3 rounded-xl text-sm font-medium transition-all hover:scale-105"
+            style={{
+              backgroundColor: "var(--primary)",
+              color: "var(--background)",
+            }}
+          >
+            Schedule a Meeting
+          </a>
+          <a
+            href="#"
+            className="px-6 py-3 rounded-xl text-sm font-medium border transition-all hover:scale-105"
+            style={{
+              borderColor: "var(--glass-border)",
+            }}
+          >
+            Download CV
+          </a>
+        </div>
       </div>
     </section>
   )

@@ -2,9 +2,21 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import dynamic from "next/dynamic"
 import { ABOUT_ITEMS, type AboutItem } from "@/types"
 
-function AboutCard({ item, onSelect }: { item: AboutItem; onSelect: (item: AboutItem) => void }) {
+const CodingTerminal = dynamic(
+  () => import("@/components/features/CodingTerminal"),
+  { ssr: false }
+)
+
+function AboutCard({
+  item,
+  onSelect,
+}: {
+  item: AboutItem
+  onSelect: (item: AboutItem) => void
+}) {
   return (
     <motion.button
       onClick={() => onSelect(item)}
@@ -18,7 +30,9 @@ function AboutCard({ item, onSelect }: { item: AboutItem; onSelect: (item: About
       whileTap={{ scale: 0.98 }}
     >
       <span className="text-5xl">{item.icon}</span>
-      <span className="text-sm font-medium text-foreground/80">{item.label}</span>
+      <span className="text-sm font-medium text-foreground/80">
+        {item.label}
+      </span>
       <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
@@ -34,7 +48,10 @@ export default function About() {
   const [selected, setSelected] = useState<AboutItem | null>(null)
 
   return (
-    <section id="about" className="relative min-h-screen flex items-center py-32 px-4">
+    <section
+      id="about"
+      className="relative min-h-screen flex items-center py-32 px-4"
+    >
       <div className="max-w-6xl mx-auto w-full">
         <motion.h2
           className="text-3xl md:text-5xl font-bold text-center mb-4"
@@ -51,10 +68,10 @@ export default function About() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          Click an object to learn more about what I do.
+          Click an object to learn more, or watch the terminal below.
         </motion.p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto mb-12">
           {ABOUT_ITEMS.map((item) => (
             <AboutCard key={item.id} item={item} onSelect={setSelected} />
           ))}
@@ -66,7 +83,7 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
-              className="mt-12 max-w-xl mx-auto p-8 rounded-2xl text-center"
+              className="mb-12 max-w-xl mx-auto p-8 rounded-2xl text-center"
               style={{
                 background: "var(--glass)",
                 border: "1px solid var(--primary)",
@@ -87,6 +104,10 @@ export default function About() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        <div className="max-w-xl mx-auto">
+          <CodingTerminal />
+        </div>
       </div>
     </section>
   )
