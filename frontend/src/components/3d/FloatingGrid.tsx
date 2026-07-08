@@ -23,10 +23,12 @@ export default function FloatingGrid() {
     return geo
   }, [])
 
-  useFrame(({ clock }) => {
+  const startTime = useRef(Date.now())
+
+  useFrame(() => {
     if (mesh.current) {
-      mesh.current.position.y =
-        Math.sin(clock.elapsedTime * 0.5) * 0.3 - 3
+      const t = (Date.now() - startTime.current) / 1000
+      mesh.current.position.y = Math.sin(t * 0.5) * 0.3 - 3
     }
   })
 

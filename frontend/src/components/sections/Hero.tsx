@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState, useRef } from "react"
+import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 
 const TITLE = "I Don't Just Build Websites. I Build Digital Experiences."
 const SUBTITLE =
@@ -10,6 +10,21 @@ const SUBTITLE =
 export default function Hero() {
   const [displayedText, setDisplayedText] = useState("")
   const [showCursor, setShowCursor] = useState(true)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  })
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
+
+  const contentOpacity = useTransform(smoothProgress, [0, 0.8], [1, 0])
+  const contentScale = useTransform(smoothProgress, [0, 0.8], [1, 0.95])
 
   useEffect(() => {
     let index = 0
@@ -32,11 +47,26 @@ export default function Hero() {
   }, [])
 
   return (
-    <section
-      id="hero"
-      className="relative min-h-screen flex items-center justify-center px-4"
-    >
-      <div className="max-w-4xl mx-auto text-center z-10">
+    <section ref={containerRef} id="hero" className="relative h-screen w-full overflow-hidden flex flex-col items-center justify-center px-4">
+      {/* Looping Video Background */}
+      <div className="absolute inset-0 w-full h-full z-0 bg-background">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-60"
+        >
+          <source src="/hero-bg.mp4" type="video/mp4" />
+        </video>
+        {/* Subtle gradient overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-background/50 bg-gradient-to-t from-background via-transparent to-transparent" />
+      </div>
+
+      <motion.div 
+        style={{ opacity: contentOpacity, scale: contentScale }}
+        className="relative max-w-4xl mx-auto text-center z-10 w-full"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,23 +137,24 @@ export default function Hero() {
             View My Work
           </a>
         </motion.div>
+      </motion.div>
 
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+      <motion.div
+        style={{ opacity: contentOpacity }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <div
+          className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5"
+          style={{ borderColor: "var(--primary)" }}
         >
           <div
-            className="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5"
-            style={{ borderColor: "var(--primary)" }}
-          >
-            <div
-              className="w-1.5 h-3 rounded-full"
-              style={{ backgroundColor: "var(--primary)" }}
-            />
-          </div>
-        </motion.div>
-      </div>
+            className="w-1.5 h-3 rounded-full"
+            style={{ backgroundColor: "var(--primary)" }}
+          />
+        </div>
+      </motion.div>
     </section>
   )
 }
